@@ -4,9 +4,35 @@ from pytube.exceptions import VideoUnavailable, VideoPrivate
 from config.config import WINDOWS_VIDEO_END_PATH
 from termcolor import colored
 
-def windows_download_video():
+def windows_download_video(use_youtube_links_file = False):
     create_output_folder()
 
+    if not use_youtube_links_file: manual_download_video()
+    else: auto_download_video()   
+
+def auto_download_video():
+    with open("config/youtube_links.txt", "r", encoding='utf-8') as links_file:
+        for video_link in links_file:
+            # Buscando o vídeo
+            youtube_video = search_video(video_link)
+
+            try:
+                youtube_video_stream = choose_resolution(youtube_video)
+                print(f"Baixando video com a resolução {youtube_video_stream.resolution} - ({round(youtube_video_stream.filesize_mb)} Mbs)...")
+
+                # Baixar o vídeo no caminho de destino
+                youtube_video_stream.download(output_path=WINDOWS_VIDEO_END_PATH)
+
+                print(colored("Download successful!", "green"))
+                print(colored("Next link...\n", "light_blue"))
+
+            except Exception as e:
+                print(colored(str(e), "yellow"))
+                continue
+
+        print(colored("Finished.", "green"))
+
+def manual_download_video():
     # Pegar o link do vídeo
     video_link = input("Digite o link do vídeo do YouTube: ")
 
@@ -19,8 +45,6 @@ def windows_download_video():
 
     # Baixar o vídeo no caminho de destino
     youtube_video_stream.download(output_path=WINDOWS_VIDEO_END_PATH)
-
-    print("Concluído!")
 
 def create_output_folder():
     print(colored("Creating output folder...", "light_blue"))
