@@ -4,13 +4,13 @@ from pytube.exceptions import VideoUnavailable, VideoPrivate
 from config.config import WINDOWS_VIDEO_END_PATH
 from termcolor import colored
 
-def windows_download_video(use_youtube_links_file = False):
+def windows_download_video(use_youtube_links_file = False, only_audio = False):
     create_output_folder()
 
-    if not use_youtube_links_file: manual_download_video()
-    else: auto_download_video()   
+    if not use_youtube_links_file: manual_download_video(only_audio)
+    else: auto_download_video(only_audio)   
 
-def auto_download_video():
+def auto_download_video(only_audio = False):
     with open("config/youtube_links.txt", "r", encoding='utf-8') as links_file:
         for video_link in links_file:
             # Buscando o vídeo
@@ -32,7 +32,7 @@ def auto_download_video():
 
         print(colored("Finished.", "green"))
 
-def manual_download_video():
+def manual_download_video(only_audio = False):
     # Pegar o link do vídeo
     video_link = input("Digite o link do vídeo do YouTube: ")
 
@@ -75,3 +75,30 @@ def choose_resolution(YOUTUBE_VIDEO):
     print(colored(f"Best resolution found was {youtube_video_stream.resolution}", "yellow"))
 
     return youtube_video_stream
+
+def auto_download_audio_only():
+    with open("config/youtube_links.txt", "r", encoding='utf-8') as links_file:
+        for video_link in links_file:
+            # Buscando o vídeo
+            youtube_video = YouTube(video_link)
+
+            try:
+                youtube_video_stream = youtube_video.streams.get_audio_only()
+                print(f"Baixando áudio com a resolução {youtube_video_stream.abr}...")
+
+                # Baixar o áudio no caminho de destino
+                audio_file = youtube_video_stream.download(output_path=WINDOWS_VIDEO_END_PATH)
+
+                # Renomear para formato MP3
+                base, _ = os.path.splitext(audio_file)
+                new_file = base + '.mp3'
+                os.rename(audio_file, new_file)
+
+                print(colored("Download successful!", "green"))
+                print(colored("Next link...\n", "light_blue"))
+
+            except Exception as e:
+                print(colored(str(e), "yellow"))
+                continue
+
+        print(colored("Finished.", "green"))
