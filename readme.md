@@ -6,7 +6,7 @@ Em qualquer um dos dois sisemas operacionais que este projeto foi desenvolvido s
 as dependẽncias do projeto. Essas dependências podem ser encontradas no arquivo na raiz do projeto "requirements.txt".
 
 > **Detalhe:**
-> Se você estiver usando Linux precisará usar **pip3** ao invés de **pip** em todos os comandos listados no Readme, o mesmo valoe para
+> Se você estiver usando Linux precisará usar **pip3** ao invés de **pip** em todos os comandos listados no Readme, o mesmo vale para o outro
 > comandos com python, no linux usará **python3** e no windows apenas **python**.
 
 Aperte `CTRL + J` para abrir o terminal no VsCode. Ou acesse o terminal do editor de código que está usando. Com o terminal aberto você pode usar os comandos a seguir:
